@@ -1,0 +1,5 @@
+﻿  data_processing.c
+  main.c
+C:\Users\peiha\Desktop\C_Project\ppg_filter\main.c(41,23): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
+  ppg_filter.vcxproj -> C:\Users\peiha\Desktop\C_Project\ppg_filter\Debug\ppg_filter.exe

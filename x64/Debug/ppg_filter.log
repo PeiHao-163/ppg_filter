@@ -1,0 +1,18 @@
+﻿  data_processing.c
+C:\Users\peiha\Desktop\C_Project\ppg_filter\data_processing.c(47,64): error C2065: 'SAMPLE_RATE': undeclared identifier
+C:\Users\peiha\Desktop\C_Project\ppg_filter\data_processing.c(74,36): error C2065: 'FILTER_LENGTH': undeclared identifier
+  fftnew.c
+C:\Users\peiha\Desktop\C_Project\ppg_filter\fftnew.c(66,18): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\peiha\Desktop\C_Project\ppg_filter\fftnew.c(67,18): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\peiha\Desktop\C_Project\ppg_filter\fftnew.c(98,16): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\peiha\Desktop\C_Project\ppg_filter\fftnew.c(133,18): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\peiha\Desktop\C_Project\ppg_filter\fftnew.c(135,19): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\peiha\Desktop\C_Project\ppg_filter\fftnew.c(165,18): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\peiha\Desktop\C_Project\ppg_filter\fftnew.c(166,25): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\peiha\Desktop\C_Project\ppg_filter\fftnew.c(173,23): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  main.c
+C:\Users\peiha\Desktop\C_Project\ppg_filter\main.c(36,3): warning C4013: 'calculateZScores' undefined; assuming extern returning int
+C:\Users\peiha\Desktop\C_Project\ppg_filter\main.c(59,4): warning C4013: 'smooth_data' undefined; assuming extern returning int
+C:\Users\peiha\Desktop\C_Project\ppg_filter\main.c(63,21): warning C4013: 'find_peaks' undefined; assuming extern returning int
+C:\Users\peiha\Desktop\C_Project\ppg_filter\main.c(41,23): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
