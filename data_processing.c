@@ -68,15 +68,15 @@ void smooth_data(double data[], int size, double smoothed_data[]) {
 	}
 }
 
-//void firFilter(int* input, double* output, int length, double* coefficients) {
-//	double sum;
-//	for (int i = 0; i < length; i++) {
-//		sum = 0;
-//		for (int j = 0; j < FILTER_LENGTH; j++) {
-//			if (i - j >= 0) {
-//				sum += input[i - j] * coefficients[j];
-//			}
-//		}
-//		output[i] = sum;
-//	}
-//}
+void firFilter(double* input, double* output, int input_length, double* coefficients) {
+	double sum;
+	for (int i = 0; i < input_length; i++) {
+		sum = 0;
+		for (int j = 0; j < FILTER_LENGTH; j++) {
+			if (i - j >= 0) {
+				sum += input[i - j] * (double)coefficients[j];
+			}
+		}
+		output[i] = sum;
+	}
+}

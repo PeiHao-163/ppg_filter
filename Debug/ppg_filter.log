@@ -1,5 +1,4 @@
-﻿  data_processing.c
-  main.c
-C:\Users\peiha\Desktop\C_Project\ppg_filter\main.c(41,23): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  Generating Code...
+﻿  main.c
+C:\Users\peiha\Desktop\C_Project\ppg_filter\main.c(21,12): warning C4133: 'function': incompatible types - from 'double [1500]' to 'int *'
+C:\Users\peiha\Desktop\C_Project\ppg_filter\main.c(49,23): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   ppg_filter.vcxproj -> C:\Users\peiha\Desktop\C_Project\ppg_filter\Debug\ppg_filter.exe

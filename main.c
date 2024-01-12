@@ -9,10 +9,18 @@
 #define ACCEL_THRESHOLD 0.39
 
 int main() {
-	//double filtered_PPG[1500];
-	//firFilter(AFEData1, filtered_PPG, DATA_SIZE, fir_coefficients);
-	//for (int i = 0; i < DATA_SIZE;i++)printf("%lf\n", filtered_PPG[i]);
+	//First, normalize the 1500 samples of the AFEData1
+	double input_data[DATA_SIZE];
+	double normalized_PPG[DATA_SIZE]; 
 	
+	for (int i = 0; i < DATA_SIZE; i++)input_data[i] = (double)AFEData1[i];
+	calculateZScores(input_data, DATA_SIZE, normalized_PPG);
+	
+	//Then, using a customized FIR bandpass filter (0.4-4 Hz) on the normalized PPG data 
+	double filtered_PPG[DATA_SIZE];
+	firFilter(normalized_PPG, filtered_PPG, DATA_SIZE, fir_coefficients);	
+	
+	//Then, use the Accelerometer data to find the batches that are not noisy
 	//Iterate through all the 1500 samples with a sliding window with size of 125 (1500/125=12 batches) samples
 	double rr_diffs_sum = 0;
 	int rr_count = 0;
@@ -50,7 +58,7 @@ int main() {
 
 			for (int i = 0; i < WINDOW_SIZE; i++) {
 				int current_index = j * WINDOW_SIZE + i;
-				ppg_batch[i] = (double)AFEData1[current_index];
+				ppg_batch[i] = filtered_PPG[current_index];
 			}
 			calculateZScores(ppg_batch, WINDOW_SIZE, zScores);
 			
@@ -71,7 +79,7 @@ int main() {
 	}
 	double heart_rate = 60 / (rr_diffs_sum / (rr_count));
 
-	printf("rr_count = %d, rr_diffs_sum = %lf, heart_rate = %f\n", rr_count, rr_diffs_sum, heart_rate);
+	printf("rr_count = %d, rr_diffs_sum = %lf, heart_rate = %f, hr_real = %f\n", rr_count, rr_diffs_sum, heart_rate, Real_HR);
 
 	return 0;
 }
