@@ -3,18 +3,19 @@
 #include"ppgdata.h"
 #include"data_processing.h"
 
-#define DATA_SIZE 1500
+#define DATA_SIZE 1250
+#define PRE_DISCARDED_DATA_SIZE 250
+
 #define SAMPLE_RATE 25
 #define WINDOW_SIZE 125 //5 seconds
 #define ACCEL_THRESHOLD 0.39
 
 int main() {
-
-	//First, normalize the 1500 samples of the AFEData1
+	//First, normalize the 1250 samples of the AFEData1
 	double input_raw_ppg[DATA_SIZE];
 	double normalized_ppg[DATA_SIZE]; 
 	
-	for (int i = 0; i < DATA_SIZE; i++)input_raw_ppg[i] = (double)AFEData1[i];
+	for (int i = 0; i < DATA_SIZE; i++)input_raw_ppg[i] = (double)AFEData1[i + PRE_DISCARDED_DATA_SIZE];
 	calculateZScores(input_raw_ppg, DATA_SIZE, normalized_ppg);
 	
 	//Then, using a customized FIR bandpass filter (0.4-4 Hz) on the normalized PPG data 
@@ -26,9 +27,9 @@ int main() {
 	for (int i = 0; i < DATA_SIZE; i++)
 	{
 		//Get the result of the Accelerometer data
-		double x = (double)Accelerometer_X[i];
-		double y = (double)Accelerometer_Y[i];
-		double z = (double)Accelerometer_Z[i];
+		double x = (double)Accelerometer_X[i + PRE_DISCARDED_DATA_SIZE];
+		double y = (double)Accelerometer_Y[i + PRE_DISCARDED_DATA_SIZE];
+		double z = (double)Accelerometer_Z[i + PRE_DISCARDED_DATA_SIZE];
 
 		SquareRoot_Accel[i] = sqrt(x * x + y * y + z * z);
 	}
@@ -40,11 +41,11 @@ int main() {
 	firFilter(normalized_Accel, filtered_Accel, DATA_SIZE, fir_coefficients);
 	
 	//Then, use the Accelerometer data to find the batches that are not noisy
-	//Iterate through all the 1500 samples with a sliding window with size of 125 (1500/125=12 batches) samples
+	//Iterate through all the 1250 samples with a sliding window with size of 125 (1250/125=10 batches) samples
 	double rr_diffs_sum = 0;
 	int rr_count = 0;
 
-	for (int j = 0; j < (DATA_SIZE / WINDOW_SIZE); j++) //Iterate all 12 batches
+	for (int j = 0; j < (DATA_SIZE / WINDOW_SIZE); j++) //Iterate all 10 batches
 	{
 		double current_batch_Accel[WINDOW_SIZE];
 		

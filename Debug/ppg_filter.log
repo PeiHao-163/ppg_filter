@@ -1,5 +1,5 @@
 ﻿  main.c
-C:\Users\peiha\Desktop\C_Project\ppg_filter\main.c(22,12): warning C4133: 'function': incompatible types - from 'double [1500]' to 'int *'
-C:\Users\peiha\Desktop\C_Project\ppg_filter\main.c(40,12): warning C4133: 'function': incompatible types - from 'double [1500]' to 'int *'
-C:\Users\peiha\Desktop\C_Project\ppg_filter\main.c(61,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\peiha\Desktop\C_Project\ppg_filter\main.c(23,12): warning C4133: 'function': incompatible types - from 'double [1250]' to 'int *'
+C:\Users\peiha\Desktop\C_Project\ppg_filter\main.c(41,12): warning C4133: 'function': incompatible types - from 'double [1250]' to 'int *'
+C:\Users\peiha\Desktop\C_Project\ppg_filter\main.c(62,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   ppg_filter.vcxproj -> C:\Users\peiha\Desktop\C_Project\ppg_filter\Debug\ppg_filter.exe
