@@ -6017,7 +6017,7 @@ int Accelerometer_Z[] = {
     0
 };
 
-double fir_coefficients[117] = {
+float fir_coefficients[117] = {
          0.000000000000000008,
         -0.000000000000000010,
         -0.000000000008613790,
