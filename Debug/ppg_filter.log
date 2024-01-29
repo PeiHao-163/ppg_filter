@@ -1,10 +1,7 @@
-﻿  data_processing.c
-C:\Users\peiha\Desktop\C_Project\ppg_filter\data_processing.c(20,9): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-  main.c
+﻿  main.c
 C:\Users\peiha\Desktop\C_Project\ppg_filter\ppgdata.h(6020,31): warning C4305: 'initializing': truncation from 'double' to 'float'
   (compiling source file 'main.c')
   
-C:\Users\peiha\Desktop\C_Project\ppg_filter\main.c(34,25): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\peiha\Desktop\C_Project\ppg_filter\main.c(62,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  Generating Code...
+C:\Users\peiha\Desktop\C_Project\ppg_filter\main.c(46,25): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\peiha\Desktop\C_Project\ppg_filter\main.c(75,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   ppg_filter.vcxproj -> C:\Users\peiha\Desktop\C_Project\ppg_filter\Debug\ppg_filter.exe
