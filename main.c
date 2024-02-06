@@ -19,6 +19,7 @@
 typedef struct {
 	float hr_measured;
 	float discard_ratio;
+	float stitched_ppg[DATA_SIZE];
 } HRValues;
 
 void hr_estimation(int* ppg_data, int* accel_x, int* accel_y, int* accel_z, HRValues* pHRValues)
@@ -57,6 +58,7 @@ void hr_estimation(int* ppg_data, int* accel_x, int* accel_y, int* accel_z, HRVa
 	float rr_diffs_sum = 0;
 	int rr_count = 0;
 	int usable_batch_count = 0;
+	float total_avg_rr_diffs = 0;
 
 	for (int j = 0; j < (DATA_SIZE / WINDOW_SIZE); j++) //Iterate all 10 batches
 	{
@@ -81,7 +83,7 @@ void hr_estimation(int* ppg_data, int* accel_x, int* accel_y, int* accel_z, HRVa
 		if (mean_abs_Accel < ACCEL_THRESHOLD) { //Consider the current batch is not noisy
 			usable_batch_count++; //Count the number of usable batches
 			float current_batch_ppg[WINDOW_SIZE];
-
+			//printf("j = %d, usable_batch_count = %d\n",j, usable_batch_count);
 			for (int i = 0; i < WINDOW_SIZE; i++) {
 				int current_index = j * WINDOW_SIZE + i;
 				current_batch_ppg[i] = filtered_ppg[current_index];
@@ -91,17 +93,27 @@ void hr_estimation(int* ppg_data, int* accel_x, int* accel_y, int* accel_z, HRVa
 			float smoothed_ppg[WINDOW_SIZE];
 			smooth_data(current_batch_ppg, WINDOW_SIZE, smoothed_ppg);
 
+			//Store the smoothed_ppg data into the smoothed_ppg[1250]
+			for (int i = 0; i < WINDOW_SIZE; i++){
+				pHRValues->stitched_ppg[(usable_batch_count-1)*WINDOW_SIZE + i] = smoothed_ppg[i];
+			}
+
 			//Calculate the peaks in this batch, and then get the heart rate
 			int peaks[WINDOW_SIZE] = { 0 };
 			int peak_count = find_peaks(smoothed_ppg, WINDOW_SIZE, peaks);
 
+			float rr_sum_current_batch = 0;
 			rr_count += peak_count - 1; //In each batch, the number of RR is 1 less than the peaks
 			for (int i = 0; i < peak_count - 1; i++) {
 				rr_diffs_sum += (peaks[i + 1] - peaks[i]) / (float)SAMPLE_RATE;
+				rr_sum_current_batch += (peaks[i + 1] - peaks[i]) / (float)SAMPLE_RATE;
 			}
+			total_avg_rr_diffs += rr_sum_current_batch / (peak_count - 1);
 		}
 	}
 	float heart_rate = 60 / (rr_diffs_sum / (rr_count));
+	float heart_rate_avg = 60 / (total_avg_rr_diffs / usable_batch_count);
+	printf("HR using Average Method: %f\n", heart_rate_avg);
 
 	float discard_ratio = 1 - usable_batch_count / (float)(DATA_SIZE / WINDOW_SIZE);
 
@@ -172,9 +184,8 @@ int main() {
 		while ((ent = readdir(dir)) != NULL) {
 			if (strstr(ent->d_name, ".csv") != NULL) {
 				snprintf(file_path, sizeof(file_path), "%s/%s", folder_path, ent->d_name);
-				//process_csv_file(file_path);
 				
-				//if (strcmp(file_path, "C:/Users/peiha/Desktop/C_Project/ppg_data/1630905988128_A.csv") == 0) {
+				if (strcmp(file_path, "C:/Users/peiha/Desktop/C_Project/ppg_data/1630905988128_A.csv") == 0) {
 					int real_hr = 0;
 					int data_afe1[NUM_ROWS] = {0};
 					int data_accel_x[NUM_ROWS] = { 0 };
@@ -183,11 +194,12 @@ int main() {
 					
 					real_hr = process_csv_file(file_path, data_afe1, data_accel_x, data_accel_y, data_accel_z);
 					
-					HRValues return_values = { 0, 0 };
+					HRValues return_values = { 0, 0, {0} };
 					hr_estimation(data_afe1, data_accel_x, data_accel_y, data_accel_z, &return_values);
-					printf("hr_real = %d, hr_measured = %f, discard_ratio = %f\n", real_hr, return_values.hr_measured, return_values.discard_ratio);
-					fprintf(file_csv, "%d,%f,%f\n", real_hr, return_values.hr_measured, return_values.discard_ratio);
-				//}
+					printf("file name: %s, hr_real = %d, hr_measured = %f, discard_ratio = %f\n", ent->d_name, real_hr, return_values.hr_measured, return_values.discard_ratio);
+					//for (int i = 0; i < DATA_SIZE; i++)printf("%f, ", return_values.stitched_ppg[i]);
+					//fprintf(file_csv, "%s, %d,%f,%f\n", ent->d_name, real_hr, return_values.hr_measured, return_values.discard_ratio);
+				}
 			}
 		}
 		closedir(dir);
