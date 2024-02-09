@@ -185,7 +185,7 @@ int main() {
 			if (strstr(ent->d_name, ".csv") != NULL) {
 				snprintf(file_path, sizeof(file_path), "%s/%s", folder_path, ent->d_name);
 				
-				if (strcmp(file_path, "C:/Users/peiha/Desktop/C_Project/ppg_data/1630905988128_A.csv") == 0) {
+				//if (strcmp(file_path, "C:/Users/peiha/Desktop/C_Project/ppg_data/1630905988128_A.csv") == 0) {
 					int real_hr = 0;
 					int data_afe1[NUM_ROWS] = {0};
 					int data_accel_x[NUM_ROWS] = { 0 };
@@ -194,12 +194,24 @@ int main() {
 					
 					real_hr = process_csv_file(file_path, data_afe1, data_accel_x, data_accel_y, data_accel_z);
 					
-					HRValues return_values = { 0, 0, {0} };
-					hr_estimation(data_afe1, data_accel_x, data_accel_y, data_accel_z, &return_values);
-					printf("file name: %s, hr_real = %d, hr_measured = %f, discard_ratio = %f\n", ent->d_name, real_hr, return_values.hr_measured, return_values.discard_ratio);
-					//for (int i = 0; i < DATA_SIZE; i++)printf("%f, ", return_values.stitched_ppg[i]);
-					//fprintf(file_csv, "%s, %d,%f,%f\n", ent->d_name, real_hr, return_values.hr_measured, return_values.discard_ratio);
-				}
+					int flag_negative_ppg = 0; //0: no negative samples; 1: have negative samples
+					//Check if ppg data has negative ppg samples. If not, then continue hr estimation
+					for (int i = 0; i < DATA_SIZE; i++) {
+						if (data_afe1[i + PRE_DISCARDED_DATA_SIZE] < 0) {
+							flag_negative_ppg = 1;
+							break;
+						}
+					}
+
+					if (flag_negative_ppg == 0) {
+						HRValues return_values = { 0, 0, {0} };
+						hr_estimation(data_afe1, data_accel_x, data_accel_y, data_accel_z, &return_values);
+						printf("file name: %s, hr_real = %d, hr_measured = %f, discard_ratio = %f\n", ent->d_name, real_hr, return_values.hr_measured, return_values.discard_ratio);
+						//for (int i = 0; i < DATA_SIZE; i++)printf("%f, ", return_values.stitched_ppg[i]);
+						fprintf(file_csv, "%s, %d,%f,%f\n", ent->d_name, real_hr, return_values.hr_measured, return_values.discard_ratio);
+					}
+					
+				//}
 			}
 		}
 		closedir(dir);
