@@ -194,16 +194,15 @@ int main() {
 					
 					real_hr = process_csv_file(file_path, data_afe1, data_accel_x, data_accel_y, data_accel_z);
 					
-					int flag_negative_ppg = 0; //0: no negative samples; 1: have negative samples
+					int num_negative_ppg = 0; //number of negative ppg samples
 					//Check if ppg data has negative ppg samples. If not, then continue hr estimation
 					for (int i = 0; i < DATA_SIZE; i++) {
 						if (data_afe1[i + PRE_DISCARDED_DATA_SIZE] < 0) {
-							flag_negative_ppg = 1;
-							break;
+							num_negative_ppg++;
 						}
 					}
-
-					if (flag_negative_ppg == 0) {
+					printf("Negative PPG Numbers: %d\n", num_negative_ppg);
+					if (num_negative_ppg <= 500) {//Consider the negative samples below 500 as quiet
 						HRValues return_values = { 0, 0, {0} };
 						hr_estimation(data_afe1, data_accel_x, data_accel_y, data_accel_z, &return_values);
 						printf("file name: %s, hr_real = %d, hr_measured = %f, discard_ratio = %f\n", ent->d_name, real_hr, return_values.hr_measured, return_values.discard_ratio);
